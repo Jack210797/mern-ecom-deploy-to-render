@@ -1,8 +1,10 @@
-import { deleteCartItem, fetchCartItems, updateCartQuantity } from '@/store/shop/cart-slice'
+import { deleteCartItem, updateCartQuantity } from '@/store/shop/cart-slice'
+import { fetchAllFilteredProducts } from '@/store/shop/products-slice'
 import { Button } from '../ui/button'
 import { Minus, Plus, Trash } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast'
+import { useEffect } from 'react'
 
 const UserCartItemsContent = ({ cartItem }) => {
   const { user } = useSelector((state) => state.auth)
@@ -11,6 +13,12 @@ const UserCartItemsContent = ({ cartItem }) => {
 
   const dispatch = useDispatch()
   const { toast } = useToast()
+
+  useEffect(() => {
+    if (!productList || productList.length === 0) {
+      dispatch(fetchAllFilteredProducts({ filterParams: {}, sortParams: '' }))
+    }
+  }, [dispatch, productList])
 
   const handleCartItemDelete = (getCartItem) => {
     dispatch(deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })).then((data) => {
@@ -29,9 +37,17 @@ const UserCartItemsContent = ({ cartItem }) => {
       if (getCartItems.length) {
         const indexOfCurrentItems = getCartItems.findIndex((item) => item.productId === getCartItem?.productId)
 
+        console.log('Cart item product ID:', getCartItem?.productId)
+        console.log(
+          'Product list IDs:',
+          productList.map((p) => p._id)
+        )
+
         const getCurrentProductIndex = productList.findIndex((product) => product._id === getCartItem?.productId)
 
         if (getCurrentProductIndex === -1) {
+          console.error(`Product not found: ${getCartItem?.productId}`)
+          console.log('Available products:', productList)
           toast({
             title: 'Product not found in product list',
             variant: 'destructive'
@@ -61,13 +77,28 @@ const UserCartItemsContent = ({ cartItem }) => {
         productId: getCartItem?.productId,
         quantity: newQuantity
       })
-    ).then((data) => {
-      if (data?.payload?.success) {
+    )
+      .then((data) => {
+        if (data?.payload?.success) {
+          toast({
+            title: 'Cart item is updated successfully'
+          })
+        } else {
+          toast({
+            title: 'Failed to update cart item',
+            description: data?.payload?.message || 'An error occurred',
+            variant: 'destructive'
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating cart:', error)
         toast({
-          title: 'Cart item is updated successfully'
+          title: 'Failed to update cart item',
+          description: 'Network error or server unavailable',
+          variant: 'destructive'
         })
-      }
-    })
+      })
   }
 
   return (
