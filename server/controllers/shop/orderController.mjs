@@ -20,6 +20,27 @@ const createOrder = async (req, res) => {
       payerId
     } = req.body
 
+    if (!totalAmount || isNaN(totalAmount) || totalAmount <= 0) {
+      return res.status(400).json({ success: false, message: 'Invalid total amount' })
+    }
+
+    if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return res.status(400).json({ success: false, message: 'Cart items are required' })
+    }
+
+    const validatedCartItems = cartItems.map((item) => {
+      if (!item.price || isNaN(item.price)) {
+        throw new Error(`Invalid price for item: ${item.title || 'Unknown product'}`)
+      }
+      return {
+        name: item.title || 'Product',
+        sku: item.productId,
+        price: (item.price || 0).toFixed(2),
+        currency: 'USD',
+        quantity: item.quantity || 1
+      }
+    })
+
     const create_payment_json = {
       intent: 'sale',
       payer: {
@@ -33,16 +54,16 @@ const createOrder = async (req, res) => {
         {
           item_list: {
             items: cartItems.map((item) => ({
-              name: item.title,
+              name: item.title || 'Product',
               sku: item.productId,
-              price: item.price.toFixed(2),
+              price: (item.price || 0).toFixed(2),
               currency: 'USD',
-              quantity: item.quantity
+              quantity: item.quantity || 1
             }))
           },
           amount: {
             currency: 'USD',
-            total: totalAmount.toFixed(2)
+            total: (totalAmount || 0).toFixed(2)
           },
           description: 'Order description'
         }
