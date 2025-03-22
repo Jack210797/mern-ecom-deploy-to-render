@@ -37,17 +37,9 @@ const UserCartItemsContent = ({ cartItem }) => {
       if (getCartItems.length) {
         const indexOfCurrentItems = getCartItems.findIndex((item) => item.productId === getCartItem?.productId)
 
-        console.log('Cart item product ID:', getCartItem?.productId)
-        console.log(
-          'Product list IDs:',
-          productList.map((p) => p._id)
-        )
-
         const getCurrentProductIndex = productList.findIndex((product) => product._id === getCartItem?.productId)
 
         if (getCurrentProductIndex === -1) {
-          console.error(`Product not found: ${getCartItem?.productId}`)
-          console.log('Available products:', productList)
           toast({
             title: 'Product not found in product list',
             variant: 'destructive'
