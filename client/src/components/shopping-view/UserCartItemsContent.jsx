@@ -30,9 +30,16 @@ const UserCartItemsContent = ({ cartItem }) => {
         const indexOfCurrentItems = getCartItems.findIndex((item) => item.productId === getCartItem?.productId)
 
         const getCurrentProductIndex = productList.findIndex((product) => product._id === getCartItem?.productId)
-        const getTotalStock = productList[getCurrentProductIndex].totalStock
 
-        console.log(getCurrentProductIndex, getTotalStock, 'getCurrentProductIndex')
+        if (getCurrentProductIndex === -1) {
+          toast({
+            title: 'Product not found in product list',
+            variant: 'destructive'
+          })
+          return
+        }
+
+        const getTotalStock = productList[getCurrentProductIndex].totalStock
 
         if (indexOfCurrentItems > -1) {
           const getQuantity = getCartItems[indexOfCurrentItems]?.quantity
