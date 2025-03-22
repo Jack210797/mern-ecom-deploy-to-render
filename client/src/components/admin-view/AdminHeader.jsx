@@ -9,9 +9,8 @@ const AdminHeader = ({ setOpenSidebar }) => {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    // dispatch(logoutUser())
     dispatch(resetTokenAndCredentials())
-    sessionStorage.clear()
+    localStorage.clear()
     navigate('/auth/login')
   }
   return (
