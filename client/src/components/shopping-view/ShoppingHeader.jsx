@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { DropdownMenuItem, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
-import { logoutUser } from '../../store/auth-slice/index.js'
+import { logoutUser, resetTokenAndCredentials } from '../../store/auth-slice/index.js'
 import UserCartWrapper from './UserCartWrapper'
 import { fetchCartItems } from '../../store/shop/cart-slice'
 import { Label } from '../ui/label'
@@ -61,7 +61,10 @@ const HeaderRightContent = () => {
   const dispatch = useDispatch()
 
   const handleLogout = () => {
-    dispatch(logoutUser())
+    // dispatch(logoutUser())
+    dispatch(resetTokenAndCredentials())
+    sessionStorage.clear()
+    navigate('/auth/login')
   }
 
   useEffect(() => {

@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 import User from '../../models/User.js'
 
 import dotenv from 'dotenv'
-import e from 'express'
 
 dotenv.config()
 
@@ -48,9 +47,19 @@ const loginUser = async (req, res) => {
       { expiresIn: '60m' }
     )
 
-    res.cookie('token', token, { httpOnly: true, secure: true }).json({
+    // res.cookie('token', token, { httpOnly: true, secure: true }).json({
+    //   success: true,
+    //   message: 'Logged in successfull',
+    //   user: {
+    //     email: checkUser.email,
+    //     role: checkUser.role,
+    //     id: checkUser._id,
+    //     userName: checkUser.userName
+    //   }
+    res.status(200).json({
       success: true,
       message: 'Logged in successfull',
+      token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
@@ -71,8 +80,23 @@ const logoutUser = async (req, res) => {
 }
 
 //auth middleware
+// const authMiddleware = async (req, res, next) => {
+//   const token = req.cookies.token
+
+//   if (token) {
+//     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//       if (err) return res.status(401).json({ success: false, message: 'Unauthorized user!' })
+//       req.user = decoded
+//       next()
+//     })
+//   } else {
+//     res.status(401).json({ success: false, message: 'Unauthorized user!' })
+//   }
+// }
+
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
