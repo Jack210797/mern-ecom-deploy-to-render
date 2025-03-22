@@ -46,7 +46,6 @@ const Address = ({ setCurrentSelectedAddress, selectedId }) => {
           }
         })
       : dispatch(addNewAddress({ ...formData, userId: user?.id })).then((data) => {
-          console.log(data)
           if (data?.payload?.success) {
             dispatch(fetchAllAddress(user?.id))
             setFormData(initialAddressFormData)

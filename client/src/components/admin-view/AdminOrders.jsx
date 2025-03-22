@@ -27,7 +27,6 @@ const AdminOrders = () => {
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true)
   }, [orderDetails])
-  console.log(orderDetails, 'orderDetails')
 
   return (
     <Card>

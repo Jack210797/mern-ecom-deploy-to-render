@@ -33,7 +33,7 @@ export const getAllOrdersByUserId = createAsyncThunk('/order/getAllOrdersByUserI
 
 export const getOrderDetails = createAsyncThunk('/order/getOrderDetails', async (id) => {
   const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/shop/order/details/${id}`)
-  console.log('API response for order details:', response.data)
+
   return response.data
 })
 

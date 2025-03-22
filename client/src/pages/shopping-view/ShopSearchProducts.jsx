@@ -46,8 +46,6 @@ const ShopSearchProducts = () => {
   }, [keyword, dispatch, setSearchParams])
 
   const handleAddtoCart = (getCurrentProductId, getTotalStock) => {
-    console.log(cartItems, 'cartItems')
-
     let getCartItems = cartItems.items || []
 
     if (getCartItems.length) {
