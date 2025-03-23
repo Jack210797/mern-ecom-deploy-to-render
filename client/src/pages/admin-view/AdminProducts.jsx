@@ -130,7 +130,9 @@ const AdminProducts = () => {
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
             <SheetTitle>{currentEditedId !== null ? 'Edit Product' : 'Add New Product'}</SheetTitle>
-            <SheetDescription>Here you can add new product</SheetDescription>
+            <SheetDescription>
+              {currentEditedId !== null ? 'Here you can edit product' : 'Here you can add new product'}
+            </SheetDescription>
           </SheetHeader>
           <ProductImageUpload
             imageFile={imageFile}
